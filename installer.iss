@@ -14,6 +14,14 @@ Source: "dist\tcpm.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Code]
 
+const
+  WM_SETTINGCHANGE = $001A;
+
+procedure BroadcastEnvironmentChange();
+begin
+  SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, 'Environment');
+end;
+
 procedure AddToSystemPath();
 var
   PathValue: string;
@@ -36,6 +44,7 @@ begin
         'Path',
         PathValue + ';' + AppDir
       );
+      BroadcastEnvironmentChange();
     end;
   end;
 end;
