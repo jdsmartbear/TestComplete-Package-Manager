@@ -14,7 +14,7 @@
 
 Download the installer from the official GitHub release:
 
-👉 **[Download TCPM v0.1.0 Installer](https://github.com/jdsmartbear/TestComplete-Package-Manager/releases/download/v0.1.0/tcpm-setup.exe)**
+👉 **[Download TCPM v0.1.1 Installer](https://github.com/jdsmartbear/TestComplete-Package-Manager/releases/download/v0.1.1/tcpm-setup.exe)**
 
 Run the installer and follow the prompts.  
 Administrative privileges are required because TCPM installs to `Program Files` and updates the system `PATH`.
@@ -28,7 +28,7 @@ tcpm -v
 Expected output:
 
 <pre>
-tcpm version 0.1.0
+tcpm version 0.1.1
 </pre>
 
 ---
@@ -64,7 +64,7 @@ tcpm install placeholder-package
 tcpm list
 ```
 
-> Note: In v0.1.0 this command is a stub and will be expanded in future releases.
+> Note: In v0.1.1 this command is a stub and will be expanded in future releases.
 
 ---
 
@@ -74,7 +74,7 @@ tcpm list
 tcpm uninstall <package-name>
 ```
 
-> Note: Uninstall behavior is not yet implemented in v0.1.0.
+> Note: Uninstall behavior is not yet implemented in v0.1.1.
 
 ---
 
