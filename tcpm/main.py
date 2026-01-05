@@ -1,9 +1,9 @@
 import sys
-from tpm import install, uninstall, list, version
+from tcpm import install, uninstall, list, version
 
 def main():
     if len(sys.argv) < 2:
-        print('Usage: tpm <command> [args]')
+        print('Usage: tcpm <command> [args]')
         return
 
     cmd = sys.argv[1]

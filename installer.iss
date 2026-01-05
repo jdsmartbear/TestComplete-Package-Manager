@@ -1,16 +1,18 @@
 [Setup]
 AppName=TestComplete Package Manager
-AppVersion=0.1.0
-DefaultDirName={pf}\TestComplete Package Manager
+AppVersion=0.1.1
+DefaultDirName={commonpf}\TestComplete Package Manager
 DefaultGroupName=TestComplete Package Manager
-OutputBaseFilename=tpm-setup
+OutputBaseFilename=tcpm-setup
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64os
 PrivilegesRequired=admin
+UninstallDisplayName=TestComplete Package Manager
+UninstallFilesDir={app}
 
 [Files]
-Source: "dist\tpm.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\tcpm.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
 ; Add install directory to system PATH

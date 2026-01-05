@@ -9,7 +9,7 @@ PACKAGES_DIR = 'packages'
 
 def run(args):
     if not args:
-        print('Usage: tpm install <package-name>')
+        print('Usage: tcpm install <package-name>')
         return
 
     packageName = args[0]
