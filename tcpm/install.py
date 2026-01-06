@@ -2,10 +2,12 @@ import os
 import shutil
 import zipfile
 import tempfile
-import urllib.request
+
+from tcpm.download import downloadFile
 
 REPO_ZIP_URL = 'https://github.com/jdsmartbear/TestComplete-Package-Manager/archive/refs/heads/main.zip'
 PACKAGES_DIR = 'packages'
+
 
 def run(args):
     if not args:
@@ -19,7 +21,7 @@ def run(args):
     zipPath = os.path.join(tmpDir, f'{packageName}.zip')
 
     print('Downloading package repository...')
-    urllib.request.urlretrieve(REPO_ZIP_URL, zipPath)
+    downloadFile(REPO_ZIP_URL, zipPath)
 
     with zipfile.ZipFile(zipPath, 'r') as zipRef:
         zipRef.extractall(tmpDir)
