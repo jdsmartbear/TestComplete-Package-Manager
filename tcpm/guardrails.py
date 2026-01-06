@@ -10,12 +10,12 @@ from tcpm.download import downloadFile
 # ============================================================
 
 STORES_CHILD_LINE = (
-    '\t\t<child name="Stores" '
+    '\n\t\t<child name="Stores" '
     'key="{5209DD15-2605-40DF-A046-0A90EFB0A928}" '
     'type="Stores" '
     'typeId="{5238AF17-5FE2-48FF-8BCC-9803A975A4F4}" '
     'pluginName="Stores" '
-    'path="Stores\\Stores.tcStores" />\n'
+    'path="Stores\\Stores.tcStores" />'
 )
 
 FILES_TCFILES_URL = (
@@ -66,8 +66,12 @@ def ensureProjectDirectory(commandName: str):
 
 def killTestCompleteProcesses():
     targets = ('testcomplete', 'testexecute')
+    maxPasses = 10
+    passes = 0
 
-    while True:
+    while passes < maxPasses:
+        passes += 1
+
         result = subprocess.run(
             ['tasklist'],
             capture_output=True,
@@ -93,6 +97,8 @@ def killTestCompleteProcesses():
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
+
+    print('Warning: Some TestComplete/TestExecute processes could not be terminated.')
 
 
 # ============================================================
@@ -123,6 +129,7 @@ def storesCheck():
     updatedText = (
         text[:end]
         + STORES_CHILD_LINE
+        + '\n'
         + text[end:]
     )
 
@@ -137,17 +144,15 @@ def storesFilesCheck():
     projectRoot = Path.cwd()
 
     storesDir = projectRoot / 'Stores'
-    filesDir  = storesDir / 'Files'
-    tcpmDir   = filesDir / 'TCPM'
+    filesDir = storesDir / 'Files'
+    tcpmDir = filesDir / 'TCPM'
 
-    filesTcFilesPath   = storesDir / 'Files.tcFiles'
+    filesTcFilesPath = storesDir / 'Files.tcFiles'
     storesTcStoresPath = storesDir / 'Stores.tcStores'
-    activityJsonPath   = tcpmDir / 'activity.json'
+    activityJsonPath = tcpmDir / 'activity.json'
 
-    # Always ensure TCPM directory exists
     tcpmDir.mkdir(parents=True, exist_ok=True)
 
-    # Case A: Stores does not exist
     if not storesDir.exists():
         storesDir.mkdir(parents=True, exist_ok=True)
 
@@ -155,13 +160,11 @@ def storesFilesCheck():
         downloadFile(STORES_TCSTORES_URL, storesTcStoresPath)
 
     else:
-        # Case B: Stores exists — download only missing files
         if not filesTcFilesPath.exists():
             downloadFile(FILES_TCFILES_URL, filesTcFilesPath)
 
         if not storesTcStoresPath.exists():
             downloadFile(STORES_TCSTORES_URL, storesTcStoresPath)
 
-    # Ensure activity.json exists (never overwrite)
     if not activityJsonPath.exists():
         activityJsonPath.write_text('[]', encoding='utf-8')
