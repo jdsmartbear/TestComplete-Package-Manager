@@ -1,4 +1,3 @@
-import os
 import sys
 import subprocess
 from pathlib import Path
@@ -43,16 +42,6 @@ def _hasValidMds(path: Path) -> bool:
     return False
 
 
-def _findAllProjectDirsOnDrive(driveRoot: Path):
-    matches = []
-    for root, _, files in os.walk(driveRoot):
-        for f in files:
-            if f.lower().endswith('.mds'):
-                matches.append(Path(root))
-                break
-    return matches
-
-
 def ensureProjectDirectory(commandName: str):
     cwd = Path.cwd()
 
@@ -61,33 +50,14 @@ def ensureProjectDirectory(commandName: str):
 
     print(
         f'The {commandName} command can only be run in a TestComplete Project Folder, '
-        'but no .mds file was found at the current directory.'
+        'but no .mds file was found at the current directory.\n'
     )
-    print('Would you like to see a list of all valid directories on this drive to choose from?\n')
-    print('  1) Yes')
-    print('  2) No\n')
+    print('Please change the current directory to one that contains an .mds file and try again.\n')
+    print('Example:\n')
+    print('  cd "C:\\Users\\John.Smith\\TC Projects\\ABC Project Suite\\ABC Project"')
+    print(f'  tcpm {commandName} <package-name>\n')
 
-    choice = input('Enter 1 or 2: ').strip()
-    if choice != '1':
-        sys.exit(1)
-
-    driveRoot = Path(cwd.anchor)
-    dirs = _findAllProjectDirsOnDrive(driveRoot)
-
-    if not dirs:
-        print('No TestComplete project folders were found on this drive.')
-        sys.exit(1)
-
-    print()
-    for i, d in enumerate(dirs, start=1):
-        print(f'  {i}) {d}')
-
-    print()
-    sel = input('Select a directory: ').strip()
-    if not sel.isdigit() or int(sel) < 1 or int(sel) > len(dirs):
-        sys.exit(1)
-
-    os.chdir(dirs[int(sel) - 1])
+    sys.exit(1)
 
 
 # ============================================================
