@@ -10,7 +10,7 @@ from tcpm.download import downloadFile
 # ============================================================
 
 STORES_CHILD_LINE = (
-    '\t\t<child name="Stores" '
+    '\t<child name="Stores" '
     'key="{5209DD15-2605-40DF-A046-0A90EFB0A928}" '
     'type="Stores" '
     'typeId="{5238AF17-5FE2-48FF-8BCC-9803A975A4F4}" '
