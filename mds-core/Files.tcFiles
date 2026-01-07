@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root signature="{AA2F3067-5C9B-4CCF-89D4-1F93CE1C510F}" version="15.0">
-	<children>
-		<child name="venv_setup_exampletxt_txt" key="{0F08FF9A-AB3A-460C-8DA0-F5D27F46C65A}">
-			<data signature="{FC92F8D9-8A57-4D74-B8B4-479AA50BF647}" version="15.0" caption="venv_setup_exampletxt_txt" ID="{0F08FF9A-AB3A-460C-8DA0-F5D27F46C65A}" FileName="..\..\..\..\..\..\justin.dicroce\OneDrive - SmartBear Software, Inc\Desktop\venv setup exampletxt.txt" Update="False" />
-		</child>
-		<child name="Team_Stats_txt" key="{8B104467-8799-4873-A671-3B5B2F8BCAB1}">
-			<data signature="{FC92F8D9-8A57-4D74-B8B4-479AA50BF647}" version="15.0" caption="Team_Stats_txt" ID="{8B104467-8799-4873-A671-3B5B2F8BCAB1}" FileName="Files\Team Stats.txt" Update="False" />
-		</child>
-	</children>
+	<children />
 </Root>

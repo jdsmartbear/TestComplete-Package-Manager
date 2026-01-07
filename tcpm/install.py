@@ -1,11 +1,17 @@
 import os
-import shutil
+import json
 import zipfile
 import tempfile
+import shutil
 
 from tcpm.download import downloadFile
 
-REPO_ZIP_URL = 'https://github.com/jdsmartbear/TestComplete-Package-Manager/archive/refs/heads/main.zip'
+
+REPO_ZIP_URL = (
+    'https://github.com/jdsmartbear/'
+    'TestComplete-Package-Manager/archive/refs/heads/main.zip'
+)
+
 PACKAGES_DIR = 'packages'
 
 
@@ -15,10 +21,10 @@ def run(args):
         return
 
     packageName = args[0]
-    cwd = os.getcwd()
+    projectRoot = os.getcwd()
 
     tmpDir = tempfile.mkdtemp()
-    zipPath = os.path.join(tmpDir, f'{packageName}.zip')
+    zipPath = os.path.join(tmpDir, 'repo.zip')
 
     print('Downloading package repository...')
     downloadFile(REPO_ZIP_URL, zipPath)
@@ -31,26 +37,42 @@ def run(args):
         'TestComplete-Package-Manager-main'
     )
 
-    packagePath = os.path.join(
+    packageRoot = os.path.join(
         extractedRoot,
         PACKAGES_DIR,
         packageName
     )
 
-    if not os.path.exists(packagePath):
-        print(f'Package "{packageName}" not found.')
+    manifestPath = os.path.join(packageRoot, 'manifest.json')
+
+    if not os.path.exists(manifestPath):
+        print(f'Package "{packageName}" is missing manifest.json.')
         return
 
-    print(f'Installing "{packageName}" into:')
-    print(f'  {cwd}')
+    with open(manifestPath, 'r', encoding='utf-8') as f:
+        manifest = json.load(f)
 
-    for item in os.listdir(packagePath):
-        src = os.path.join(packagePath, item)
-        dst = os.path.join(cwd, item)
+    print(f'Installing "{manifest["name"]}" into:')
+    print(f'  {projectRoot}')
 
-        if os.path.isdir(src):
-            shutil.copytree(src, dst, dirs_exist_ok=True)
-        else:
-            shutil.copy2(src, dst)
+    for entry in manifest.get('files', []):
+        fileName = entry['fileName']
+        location = entry.get('location', '').strip()
+
+        srcPath = os.path.join(packageRoot, location, fileName) \
+            if location else os.path.join(packageRoot, fileName)
+
+        if not os.path.exists(srcPath):
+            print(f'Warning: Missing file "{fileName}" in package.')
+            continue
+
+        destDir = (
+            os.path.join(projectRoot, location)
+            if location
+            else projectRoot
+        )
+
+        os.makedirs(destDir, exist_ok=True)
+        shutil.copy2(srcPath, os.path.join(destDir, fileName))
 
     print('Install complete.')

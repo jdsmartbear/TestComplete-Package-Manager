@@ -1,0 +1,13 @@
+{
+  "name": "find-in-files",
+  "dateModified": "2026-01-07T15:10:00Z",
+  "dependencies": [
+    "python"
+  ],
+  "files": [
+    {
+      "fileName": "find_in_files.py",
+      "location": "Script"
+    }
+  ]
+}

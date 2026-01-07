@@ -1,7 +1,9 @@
-from urllib.request import urlopen
+import urllib.request
 from pathlib import Path
 
-def downloadFile(url, targetPath):
-    targetPath = Path(targetPath)
-    with urlopen(url) as resp:
-        targetPath.write_bytes(resp.read())
+
+def downloadFile(url: str, destPath):
+    destPath = Path(destPath)
+    destPath.parent.mkdir(parents=True, exist_ok=True)
+
+    urllib.request.urlretrieve(url, destPath)
