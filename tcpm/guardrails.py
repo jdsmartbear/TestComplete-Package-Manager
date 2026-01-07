@@ -129,7 +129,7 @@ def storesCheck():
     updatedText = (
         text[:end]
         + STORES_CHILD_LINE
-        + '\n'
+        + '\t'
         + text[end:]
     )
 

@@ -6,12 +6,11 @@
   ],
   "files": [
     {
-      "fileName": "blah.txt",
-      "location": "Stores/Files/sample-folder"
+      "fileName": "blah.txt"
     },
     {
       "fileName": "blah-two.txt",
-      "location": "Stores/Files/sample-folder"
+      "location": "Stores\\Files\\sample-folder"
     }
   ]
 }

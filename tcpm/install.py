@@ -1,8 +1,8 @@
 import os
 import json
+import shutil
 import zipfile
 import tempfile
-import shutil
 
 from tcpm.download import downloadFile
 
@@ -13,6 +13,7 @@ REPO_ZIP_URL = (
 )
 
 PACKAGES_DIR = 'packages'
+MANIFEST_FILE = 'manifest.json'
 
 
 def run(args):
@@ -24,7 +25,7 @@ def run(args):
     projectRoot = os.getcwd()
 
     tmpDir = tempfile.mkdtemp()
-    zipPath = os.path.join(tmpDir, 'repo.zip')
+    zipPath = os.path.join(tmpDir, f'{packageName}.zip')
 
     print('Downloading package repository...')
     downloadFile(REPO_ZIP_URL, zipPath)
@@ -43,26 +44,39 @@ def run(args):
         packageName
     )
 
-    manifestPath = os.path.join(packageRoot, 'manifest.json')
+    if not os.path.isdir(packageRoot):
+        print(f'Package "{packageName}" not found.')
+        return
 
-    if not os.path.exists(manifestPath):
-        print(f'Package "{packageName}" is missing manifest.json.')
+    manifestPath = os.path.join(packageRoot, MANIFEST_FILE)
+
+    if not os.path.isfile(manifestPath):
+        print(f'Error: {MANIFEST_FILE} not found in package "{packageName}".')
         return
 
     with open(manifestPath, 'r', encoding='utf-8') as f:
         manifest = json.load(f)
 
-    print(f'Installing "{manifest["name"]}" into:')
+    files = manifest.get('files', [])
+
+    if not files:
+        print(f'Warning: No files defined in {MANIFEST_FILE}.')
+        return
+
+    print(f'Installing "{packageName}" into:')
     print(f'  {projectRoot}')
 
-    for entry in manifest.get('files', []):
-        fileName = entry['fileName']
+    for entry in files:
+        fileName = entry.get('fileName')
         location = entry.get('location', '').strip()
 
-        srcPath = os.path.join(packageRoot, location, fileName) \
-            if location else os.path.join(packageRoot, fileName)
+        if not fileName:
+            print('Warning: Skipping manifest entry with no fileName.')
+            continue
 
-        if not os.path.exists(srcPath):
+        srcPath = os.path.join(packageRoot, fileName)
+
+        if not os.path.isfile(srcPath):
             print(f'Warning: Missing file "{fileName}" in package.')
             continue
 
@@ -73,6 +87,9 @@ def run(args):
         )
 
         os.makedirs(destDir, exist_ok=True)
-        shutil.copy2(srcPath, os.path.join(destDir, fileName))
+
+        destPath = os.path.join(destDir, fileName)
+
+        shutil.copy2(srcPath, destPath)
 
     print('Install complete.')
